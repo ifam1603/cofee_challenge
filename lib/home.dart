@@ -11,13 +11,16 @@ class home extends StatefulWidget {
   State<home> createState() => _homeState();
 }
 
-class _homeState extends State<home> {
+class _homeState extends State<home> with SingleTickerProviderStateMixin{
   late PageController pageController;
   double pageOffset=0;
+  late AnimationController controller;
+  late Animation animation;
 
   @override
   void initState() {
-
+    controller =AnimationController(vsync: this,duration: Duration(milliseconds: 800));
+    animation=CurvedAnimation(parent: controller, curve: Curves.easeOutBack);
     pageController = PageController(viewportFraction:.8);
     pageController.addListener((){
       setState(() {
@@ -26,6 +29,13 @@ class _homeState extends State<home> {
     });
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+      controller.dispose();
+      pageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -65,7 +75,18 @@ class _homeState extends State<home> {
     return Positioned(
       top: 10,
       right: size.width/2-25,
-      child: Image.asset('assets/logo.png',width: 50, height: 50,)
+      child: AnimatedBuilder(
+        animation: animation,
+        builder: (context, snapshot) {
+          return Transform(
+            transform: Matrix4.identity()..translate(0.0,0,size.height/2*(1-animation.value))
+            ..scale(1+(1-animation.value)),
+            origin: Offset(25, 25),
+            child: InkWell(
+              onTap: ()=>controller.isCompleted?controller.reverse():controller.forward(),
+              child: Image.asset('assets/logo.png',width: 50, height: 50,)));
+        }
+      )
       );
   }
 
@@ -73,7 +94,19 @@ class _homeState extends State<home> {
     return Container(
       margin: EdgeInsets.only(top: 70),
       height: size.height-50,
-      child: PageView.builder(controller: pageController,itemCount: getGames().length, itemBuilder: (context,index)=>Gamecard(getGames()[index])),
+      child: AnimatedBuilder(
+        animation: animation,
+        builder: (context, snapshot) {
+          return Transform.translate(
+            //offset: Offset(400 * (1 - animation.value), 0),
+            offset: Offset(100,0),
+            child: PageView.builder(
+              controller: pageController,
+              itemCount: getGames().length, 
+              itemBuilder: (context,index)=>Gamecard(getGames()[index],pageOffset,index)),
+          );
+        }
+      ),
     );     
   }
 

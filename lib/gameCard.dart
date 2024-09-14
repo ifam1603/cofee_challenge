@@ -1,17 +1,49 @@
 import 'package:cofee_challenge/colors.dart';
 import 'package:cofee_challenge/games.dart';
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 
 class Gamecard  extends StatelessWidget{
   Game game;
-  Gamecard(this.game);
+  double pageOffset;
+  int index;
+
+  Gamecard(this.game, this.pageOffset, this.index);
+
+  late double animation;
+
+  double animate=0;
+
+  double columnAnimation=0;
+
+  double rotate=0;
+
   @override
   Widget build(BuildContext context){
 
     Size size=MediaQuery.of(context).size;
     double cardWidth =size.width-60;
     double cardHeight = size.height*.55;
+    double count=0;
+    double page;
 
+    rotate=index-pageOffset;
+
+    for(page=pageOffset;page>1;){
+      page --;
+      count ++;
+    }
+
+    animation=Curves.easeOutBack.transform(page);
+    animate =100*(count+animation);
+    columnAnimation =50*(count+animation);
+
+    for(int i=0;i<index;i++){
+      animate-=100;
+      columnAnimation-=50;
+
+    }
+    
     return Container(
       child: Stack(
         //overflow:Overflow.visible,
@@ -65,41 +97,44 @@ class Gamecard  extends StatelessWidget{
           borderRadius: BorderRadius.circular(25)
         ),
         padding: EdgeInsets.all(30) ,
-        child: Column(
-          children:<Widget> [
-            Text('Juego',style: TextStyle(
-              fontSize: 35,
-              fontWeight: FontWeight.bold,
-              color: Colors.white),
-              ),
-              SizedBox(height: 10,),
-              Text(game.description,style:TextStyle(color: Colors.white,fontSize: 18,)),
-              Spacer(),
-              Row(
-                children:<Widget> [
-                  SizedBox(width:5 ,),
-                  Image.asset('assets/logo_singleplayer.png',width: 70, height: 70,),
-                  SizedBox(width: 5,)
-                ],
-              ),
-              SizedBox(height: 15,),
-              Container(
-                height: 40,
-                decoration: BoxDecoration(color: bludlight,borderRadius: BorderRadius.circular(20)),
-                child: Center(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: <Widget> [
-                      SizedBox(width: 20,),
-                      Text('\$',style: TextStyle(fontSize: 20,color: Colors.white),),
-                      SizedBox(width: 10,),
-                      Text('19.', style: TextStyle(fontSize: 19,color: Colors.white),),
-                      Text('99', style: TextStyle(fontSize: 14,color: Colors.white),)
-                    ],
-                  ),
+        child: Transform.translate(
+          offset: Offset(-columnAnimation,0),
+          child: Column(
+            children:<Widget> [
+              Text('Juego',style: TextStyle(
+                fontSize: 35,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
                 ),
-              )
-          ],
+                SizedBox(height: 10,),
+                Text(game.description,style:TextStyle(color: Colors.white,fontSize: 18,)),
+                Spacer(),
+                Row(
+                  children:<Widget> [
+                    SizedBox(width:5 ,),
+                    Image.asset('assets/logo_singleplayer.png',width: 70, height: 70,),
+                    SizedBox(width: 5,)
+                  ],
+                ),
+                SizedBox(height: 15,),
+                Container(
+                  height: 40,
+                  decoration: BoxDecoration(color: bludlight,borderRadius: BorderRadius.circular(20)),
+                  child: Center(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget> [
+                        SizedBox(width: 20,),
+                        Text('\$',style: TextStyle(fontSize: 20,color: Colors.white),),
+                        SizedBox(width: 10,),
+                        Text('19.', style: TextStyle(fontSize: 19,color: Colors.white),),
+                        Text('99', style: TextStyle(fontSize: 14,color: Colors.white),)
+                      ],
+                    ),
+                  ),
+                )
+            ],
+          ),
         ),
       ),
       );
@@ -111,18 +146,21 @@ class Gamecard  extends StatelessWidget{
       right: -size.width * .2 + 70,
       child: Container(
         height: size.height * .26, 
-        child: Image.asset(
-          game.gameImage,
-          fit: BoxFit.contain,
+        child: Transform.rotate(
+          angle: -math.pi/14*rotate,
+          child: Image.asset(
+            game.gameImage,
+            fit: BoxFit.contain,
+          ),
         ),
       ),
     );
   }
-  
+
   Widget buildImageBlur(double cardWidth, Size size) {
     return Positioned(
       bottom: size.height * .33,
-      right: 70,
+      right: 60+animate,
       child: Container(
         width: cardWidth, // Define el ancho de la imagen basado en `cardWidth`
         height: size.height * .1, // Define la altura según un porcentaje del tamaño de la pantalla
@@ -138,6 +176,7 @@ class Gamecard  extends StatelessWidget{
     return Positioned(
       width: cardWidth,
       height: size.height *.1,
+      right: 1 +animate,
       top: 80,
       child: Image.asset(game.imageTop,fit: BoxFit.contain,)
       );

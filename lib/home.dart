@@ -49,7 +49,8 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin{
           children: <Widget>[
             buildToolbar(),
             buildLogo(size),
-            buildPager(size)
+            buildPager(size),
+            buildPageIndicator()
           ],
         )
       ),
@@ -62,9 +63,29 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin{
       child: Row(
         children: <Widget>[
             SizedBox(width: 20,),
-            Image.asset('assets/location.png',width: 30, height: 30,),
+           AnimatedBuilder(
+              animation: animation,
+              builder: (context, snapshot) {
+                double animatedValue = (400 * (1 - animation.value)).toDouble();
+                return Transform.translate(
+                  offset: Offset(animatedValue,0),
+                  child: Image.asset('assets/location.png',
+                  width: 30, 
+                  height: 30,));
+              }
+            ),
             Spacer(),
-            Image.asset('assets/drawer.png',width: 30, height: 30,),
+            AnimatedBuilder(
+              animation: animation,
+              builder: (context, snapshot) {
+               double animatedValue = (400 * (1 - animation.value)).toDouble();
+                return Transform.translate(
+                  offset: Offset(animatedValue,0),
+                  child: Image.asset('assets/drawer.png',
+                  width: 30, 
+                  height: 30,));
+              }
+            ),
             SizedBox(width: 20,),
           ],
         ),
@@ -153,5 +174,45 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin{
         colorswitchDark));
     return list;
   }
+  
+    Widget buildPageIndicator() {
+    return AnimatedBuilder(
+      animation:controller,
+      builder: (context, snapshot) {
+        return Positioned(
+          bottom: 10,
+          left: 10,
+          child: Opacity(
+            opacity: controller.value,
+            child: Row(
+              children:
+                  List.generate(getGames().length, (index) => buildContainer(index)),
+            ),
+          ),
+        );
+      }
+    );
+  }
+
+  Widget buildContainer(int index) {
+    double animate =pageOffset-index;
+    double size =10;
+    animate=animate.abs();
+    Color color =Colors.grey;
+    if(animate<=1 && animate>=0){
+      size=10+10*(1-animate);
+      color =ColorTween(begin: Colors.grey,end: mAppGreen).transform((1-animate))!;
+    }
+
+    return Container(
+      margin: EdgeInsets.all(4),
+      height: size,
+      width: size,
+      decoration: BoxDecoration(
+          color: color, borderRadius: BorderRadius.circular(20)),
+    );
+  }
+
+
 
 }

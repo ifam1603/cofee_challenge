@@ -1,3 +1,4 @@
+import 'package:cofee_challenge/colors.dart';
 import 'package:cofee_challenge/games.dart';
 import 'package:flutter/material.dart';
 
@@ -18,6 +19,9 @@ class Gamecard  extends StatelessWidget{
           buildTopText(),
           buildBackgroundImage(cardWidth,cardHeight,size),
           buildAboveCard(cardWidth,cardHeight,size),
+          buildGameImage(size),
+          buildImageBlur(cardWidth,size),
+          buildTopImage(cardWidth,cardHeight,size),
         ],
       ),
     );
@@ -69,10 +73,73 @@ class Gamecard  extends StatelessWidget{
               color: Colors.white),
               ),
               SizedBox(height: 10,),
-              Text(game.description,style:TextStyle(color: Colors.white,fontSize: 18,))
+              Text(game.description,style:TextStyle(color: Colors.white,fontSize: 18,)),
+              Spacer(),
+              Row(
+                children:<Widget> [
+                  SizedBox(width:5 ,),
+                  Image.asset('assets/logo_singleplayer.png',width: 70, height: 70,),
+                  SizedBox(width: 5,)
+                ],
+              ),
+              SizedBox(height: 15,),
+              Container(
+                height: 40,
+                decoration: BoxDecoration(color: bludlight,borderRadius: BorderRadius.circular(20)),
+                child: Center(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: <Widget> [
+                      SizedBox(width: 20,),
+                      Text('\$',style: TextStyle(fontSize: 20,color: Colors.white),),
+                      SizedBox(width: 10,),
+                      Text('19.', style: TextStyle(fontSize: 19,color: Colors.white),),
+                      Text('99', style: TextStyle(fontSize: 14,color: Colors.white),)
+                    ],
+                  ),
+                ),
+              )
           ],
         ),
       ),
+      );
+  }
+
+  Widget buildGameImage(Size size) {
+    return Positioned(
+      bottom: 160,
+      right: -size.width * .2 + 70,
+      child: Container(
+        height: size.height * .26, 
+        child: Image.asset(
+          game.gameImage,
+          fit: BoxFit.contain,
+        ),
+      ),
+    );
+  }
+  
+  Widget buildImageBlur(double cardWidth, Size size) {
+    return Positioned(
+      bottom: size.height * .33,
+      right: 70,
+      child: Container(
+        width: cardWidth, // Define el ancho de la imagen basado en `cardWidth`
+        height: size.height * .1, // Define la altura según un porcentaje del tamaño de la pantalla
+        child: Image.asset(
+          game.imageBlur,
+          fit: BoxFit.contain, // Asegura que la imagen se ajuste dentro del contenedor sin cortarse
+        ),
+      ),
+    );
+  }
+
+  Widget buildTopImage(double cardWidth, double cardHeight, Size size){
+    return Positioned(
+      width: cardWidth,
+      height: size.height *.1,
+      top: 80,
+      child: Image.asset(game.imageTop,fit: BoxFit.contain,)
       );
   }
 }

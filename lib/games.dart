@@ -7,12 +7,12 @@ class Game {
   String imageTop;
   String imageSmall;
   String imageBlur;
-  String cupImage;
+  String gameImage;
   String description;
   Color lightColor;
   Color darkColor; 
 
   Game(this.name,this.conName,this.backgroundImage,this.imageTop,this.imageSmall,this.imageBlur,
-  this.cupImage,this.description,this.lightColor,this.darkColor);
+  this.gameImage,this.description,this.lightColor,this.darkColor);
 
 }

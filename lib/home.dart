@@ -13,11 +13,18 @@ class home extends StatefulWidget {
 
 class _homeState extends State<home> {
   late PageController pageController;
+  double pageOffset=0;
 
   @override
   void initState() {
-    // TODO: implement initState
+
     pageController = PageController(viewportFraction:.8);
+    pageController.addListener((){
+      setState(() {
+        pageOffset = pageController.page!;
+      });
+    });
+
     super.initState();
   }
 
@@ -76,31 +83,31 @@ class _homeState extends State<home> {
         'Blood',
         'borne',
         'assets/fondo_ps4.png',
-        'assets/frasco_sangre.png',
+        'assets/mando_ps4.png',
         'assets/marca_cazador.png',
-        'assets/marca_cazador.png',
+        'assets/ps_logo.png',
         'assets/bloodborne.png',
         'Bladborn es un uego exclusivo de ps4 que corre a 30 fps \n(ya saquen el port a pc)',
         bludlight,
         bluddark));
     list.add(Game(
         'Gears o',
-        'f war 2',
+        'f war',
         'assets/xbox_fondo.png',
-        'assets/logo_xbox.png',
-        'assets/logo_xbox.png',
-        'assets/logo_xbox.png',
+        'assets/mando_xbox.png',
+        'assets/xbox_logo.png',
+        'assets/xbox_logo.png',
         'assets/yirs.png',
-        'yirs el juego de hombres mamados despedazando locust \nsaquen el po\nrt a pc YA.',
+        'yirs el juego de hombres mamados despedazando locust saquen el po\nrt a pc YA.',
         greenLight,
         greenDark));
     list.add(Game(
-        'breath of ',
-        'the wild',
+        'legend ',
+        'zelda',
         'assets/fondo_nintendo.png',
-        'assets/logo_switch.png',
-        'assets/logo_switch.png',
-        'assets/logo_switch.png',
+        'assets/mando_switch.png',
+        'assets/nintendo_logo.png',
+        'assets/nintendo_logo.png',
         'assets/zelda.png',
         'zelda controlamos al nene duende otra vez pero mundo abierto bien \nhecho.',
         colorswitch,

@@ -76,10 +76,11 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin{
       top: 10,
       right: size.width/2-25,
       child: AnimatedBuilder(
-        animation: animation,
+        animation: controller,
         builder: (context, snapshot) {
           return Transform(
-            transform: Matrix4.identity()..translate(0.0,0,size.height/2*(1-animation.value))
+            transform: Matrix4.identity()
+            ..translate(0.0,size.height/2*(1-animation.value))
             ..scale(1+(1-animation.value)),
             origin: Offset(25, 25),
             child: InkWell(
@@ -90,25 +91,30 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin{
       );
   }
 
-  Widget buildPager(Size size){
-    return Container(
-      margin: EdgeInsets.only(top: 70),
-      height: size.height-50,
-      child: AnimatedBuilder(
-        animation: animation,
-        builder: (context, snapshot) {
-          return Transform.translate(
-            //offset: Offset(400 * (1 - animation.value), 0),
-            offset: Offset(100,0),
-            child: PageView.builder(
-              controller: pageController,
-              itemCount: getGames().length, 
-              itemBuilder: (context,index)=>Gamecard(getGames()[index],pageOffset,index)),
-          );
-        }
-      ),
-    );     
-  }
+  Widget buildPager(Size size) {
+  return Container(
+    margin: EdgeInsets.only(top: 70),
+    height: size.height - 50,
+    child: AnimatedBuilder(
+      animation: animation,
+      builder: (context, snapshot) {
+        // Asegúrate de convertir el valor a double
+        double animatedValue = (400 * (1 - animation.value)).toDouble();
+
+        return Transform.translate(
+          offset: Offset(animatedValue, 0),
+          child: PageView.builder(
+            controller: pageController,
+            itemCount: getGames().length,
+            itemBuilder: (context, index) => Gamecard(getGames()[index], pageOffset, index),
+          ),
+        );
+      },
+    ),
+  );
+}
+
+
 
    List<Game> getGames() {
     List<Game> list = [];
